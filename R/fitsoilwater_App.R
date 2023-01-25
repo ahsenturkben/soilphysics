@@ -2,8 +2,6 @@ server_fitsoilwater <- function(input, output, session) {
 
   # my functions
 
-
-
   Rsq <- function (model)
   {
     if (!inherits(model, c("lm", "aov", "nls")))
@@ -152,7 +150,7 @@ server_fitsoilwater <- function(input, output, session) {
     }
 
     OUT <- mySUMMARY_BC2$fittingBC2
-    if (class(OUT[[1]])=="summary.nls") {
+    if (inherits(OUT[[1]], "summary.nls")) {
 
       data <- OUT[[1]]$parameters[,1]
       names <- rownames(OUT[[1]]$parameters)
@@ -243,12 +241,12 @@ server_fitsoilwater <- function(input, output, session) {
     if (input$thetaRBC0==TRUE) {thetaR <- 0}
 
     m <- try(nls(w ~ ifelse(h < hb, thetaS, thetaR + (thetaS-thetaR)*(hb/h)^lambda), start=lista,control=list(maxiter = 1000)))
-    if (class(m)=="try-error") {OUT <- OUT}
+    if (inherits(m, "try-error")) {OUT <- OUT}
     OUT <- list(summary(m), m)
     mySUMMARY_BC2$fittingBC2 <- OUT
 
 
-    if (class(m)=="nls") {
+    if (inherits(m, "nls")) {
     STAT <- NULL
     res = residuals(m)
     MAPE = 100 * mean(abs(res)/(res + predict(m)))
@@ -263,8 +261,8 @@ server_fitsoilwater <- function(input, output, session) {
   output$fittingBC2 <- renderPrint({
 
     OUT <- NULL
-    if (!is.null(mySUMMARY_BC2$fittingBC2[[1]]) || class(mySUMMARY_BC2$fittingBC2[[1]])!="summary.nls") {OUT <- matrix(nrow=1,ncol=1,data=c("Try again!"));rownames(OUT) <- "";colnames(OUT) <- ""}
-    if (class(mySUMMARY_BC2$fittingBC2[[1]])=="summary.nls") {OUT <- mySUMMARY_BC2$fittingBC2[[1]]$parameters[,-3]}
+    if (!is.null(mySUMMARY_BC2$fittingBC2[[1]]) || !inherits(mySUMMARY_BC2$fittingBC2[[1]], "summary.nls")) {OUT <- matrix(nrow=1,ncol=1,data=c("Try again!"));rownames(OUT) <- "";colnames(OUT) <- ""}
+    if (inherits(mySUMMARY_BC2$fittingBC2[[1]], "summary.nls")) {OUT <- mySUMMARY_BC2$fittingBC2[[1]]$parameters[,-3]}
     if (is.null(mySUMMARY_BC2$fittingBC2[[1]])) {OUT <- matrix(nrow=1,ncol=1,data=c("Moves the slider input for a numerical starting"));rownames(OUT) <- "";colnames(OUT) <- ""}
     OUT
 
@@ -274,8 +272,8 @@ server_fitsoilwater <- function(input, output, session) {
   output$statBC2 <- renderPrint({
 
     STAT <- NULL
-    if (!is.null(mySUMMARY_BC2$fittingBC2[[1]]) || class(mySUMMARY_BC2$fittingBC2[[1]])!="summary.nls") {STAT <- NULL}
-    if (class(mySUMMARY_BC2$fittingBC2[[1]])=="summary.nls") {STAT <- mySTAT_BC2$statBC2}
+    if (!is.null(mySUMMARY_BC2$fittingBC2[[1]]) || !inherits(mySUMMARY_BC2$fittingBC2[[1]], "summary.nls")) {STAT <- NULL}
+    if (inherits(mySUMMARY_BC2$fittingBC2[[1]], "summary.nls")) {STAT <- mySTAT_BC2$statBC2}
     if (is.null(mySUMMARY_BC2$fittingBC2[[1]])) {STAT <- NULL}
     STAT
 
@@ -349,7 +347,7 @@ server_fitsoilwater <- function(input, output, session) {
 
 
     OUT <- mySUMMARY_VG2$fittingVG2
-    if (class(OUT[[1]])=="summary.nls") {
+    if (inherits(OUT[[1]], "summary.nls")) {
 
       data <- OUT[[1]]$parameters[,1]
       names <- rownames(OUT[[1]]$parameters)
@@ -438,12 +436,12 @@ server_fitsoilwater <- function(input, output, session) {
 
 
     m <- try(nls(w ~ thetaR + ((thetaS-thetaR)/(1+(alpha*h)^n)^(1 - 1/n)), start=lista))
-    if (class(m)=="try-error") {OUT <- OUT}
+    if (inherits(m, "try-error")) {OUT <- OUT}
     OUT <- list(summary(m), m)
     mySUMMARY_VG2$fittingVG2 <- OUT
 
 
-    if (class(m)=="nls") {
+    if (inherits(m, "nls")) {
       STAT <- NULL
       res = residuals(m)
       MAPE = 100 * mean(abs(res)/(res + predict(m)))
@@ -459,8 +457,8 @@ server_fitsoilwater <- function(input, output, session) {
   output$fittingVG2 <- renderPrint({
 
     OUT <- NULL
-    if (!is.null(mySUMMARY_VG2$fittingVG2[[1]] ) || class(mySUMMARY_VG2$fittingVG2[[1]] )!="summary.nls") {OUT <- matrix(nrow=1,ncol=1,data=c("Try again!"));rownames(OUT) <- "";colnames(OUT) <- ""}
-    if (class(mySUMMARY_VG2$fittingVG2[[1]] )=="summary.nls") {OUT <- mySUMMARY_VG2$fittingVG2[[1]]$parameters[,-3]}
+    if (!is.null(mySUMMARY_VG2$fittingVG2[[1]] ) || !inherits(mySUMMARY_VG2$fittingVG2[[1]], "summary.nls")) {OUT <- matrix(nrow=1,ncol=1,data=c("Try again!"));rownames(OUT) <- "";colnames(OUT) <- ""}
+    if (inherits(mySUMMARY_VG2$fittingVG2[[1]], "summary.nls")) {OUT <- mySUMMARY_VG2$fittingVG2[[1]]$parameters[,-3]}
     if (is.null(mySUMMARY_VG2$fittingVG2[[1]] )) {OUT <- matrix(nrow=1,ncol=1,data=c("Moves the slider input for a numerical starting"));rownames(OUT) <- "";colnames(OUT) <- ""}
     OUT
 
@@ -470,8 +468,8 @@ server_fitsoilwater <- function(input, output, session) {
   output$statVG2 <- renderPrint({
 
     STAT <- NULL
-    if (!is.null(mySUMMARY_VG2$fittingVG2[[1]] ) || class(mySUMMARY_VG2$fittingVG2[[1]] )!="summary.nls") {STAT <- NULL}
-    if (class(mySUMMARY_VG2$fittingVG2[[1]] )=="summary.nls") {STAT <- mySTAT_VG2$statVG2}
+    if (!is.null(mySUMMARY_VG2$fittingVG2[[1]] ) || !inherits(mySUMMARY_VG2$fittingVG2[[1]], "summary.nls")) {STAT <- NULL}
+    if (inherits(mySUMMARY_VG2$fittingVG2[[1]], "summary.nls")) {STAT <- mySTAT_VG2$statVG2}
     if (is.null(mySUMMARY_VG2$fittingVG2[[1]] )) {STAT <- NULL}
     STAT
 
@@ -548,7 +546,7 @@ server_fitsoilwater <- function(input, output, session) {
 
 
     OUT <- mySUMMARY_DN2$fittingDN2
-    if (class(OUT[[1]])=="summary.nls") {
+    if (inherits(OUT[[1]], "summary.nls")) {
 
       data <- OUT[[1]]$parameters[,1]
       names <- rownames(OUT[[1]]$parameters)
@@ -641,12 +639,12 @@ server_fitsoilwater <- function(input, output, session) {
 
 
     m <- try(nls(w ~ thetaR + (thetaS-thetaR)*(w1*(1 + (alpha1*x)^n1)^( (1/n1) - 1) + w2*(1 + (alpha2*x)^n2)^( (1/n2) - 1)), start=lista))
-    if (class(m)=="try-error") {OUT <- OUT}
+    if (inherits(m, "try-error")) {OUT <- OUT}
     OUT <- list(summary(m), m)
     mySUMMARY_DN2$fittingDN2 <- OUT
 
 
-    if (class(m)=="nls") {
+    if (inherits(m, "nls")) {
       STAT <- NULL
       res = residuals(m)
       MAPE = 100 * mean(abs(res)/(res + predict(m)))
@@ -662,8 +660,8 @@ server_fitsoilwater <- function(input, output, session) {
   output$fittingDN2 <- renderPrint({
 
     OUT <- NULL
-    if (!is.null(mySUMMARY_DN2$fittingDN2[[1]]) || class(mySUMMARY_DN2$fittingDN2[[1]])!="summary.nls") {OUT <- matrix(nrow=1,ncol=1,data=c("Try again!"));rownames(OUT) <- "";colnames(OUT) <- ""}
-    if (class(mySUMMARY_DN2$fittingDN2[[1]])=="summary.nls") {OUT <- mySUMMARY_DN2$fittingDN2[[1]]$parameters[,-3]}
+    if (!is.null(mySUMMARY_DN2$fittingDN2[[1]]) || !inherits(mySUMMARY_DN2$fittingDN2[[1]], "summary.nls")) {OUT <- matrix(nrow=1,ncol=1,data=c("Try again!"));rownames(OUT) <- "";colnames(OUT) <- ""}
+    if (inherits(mySUMMARY_DN2$fittingDN2[[1]], "summary.nls")) {OUT <- mySUMMARY_DN2$fittingDN2[[1]]$parameters[,-3]}
     if (is.null(mySUMMARY_DN2$fittingDN2[[1]])) {OUT <- matrix(nrow=1,ncol=1,data=c("Moves the slider input for a numerical starting"));rownames(OUT) <- "";colnames(OUT) <- ""}
     OUT
 
@@ -673,8 +671,8 @@ server_fitsoilwater <- function(input, output, session) {
   output$statDN2 <- renderPrint({
 
     STAT <- NULL
-    if (!is.null(mySUMMARY_DN2$fittingDN2[[1]]) || class(mySUMMARY_DN2$fittingDN2[[1]])!="summary.nls") {STAT <- NULL}
-    if (class(mySUMMARY_DN2$fittingDN2[[1]])=="summary.nls") {STAT <- mySTAT_DN2$statDN2}
+    if (!is.null(mySUMMARY_DN2$fittingDN2[[1]]) || !inherits(mySUMMARY_DN2$fittingDN2[[1]], "summary.nls")) {STAT <- NULL}
+    if (inherits(mySUMMARY_DN2$fittingDN2[[1]], "summary.nls")) {STAT <- mySTAT_DN2$statDN2}
     if (is.null(mySUMMARY_DN2$fittingDN2[[1]])) {STAT <- NULL}
     STAT
 
@@ -744,7 +742,7 @@ server_fitsoilwater <- function(input, output, session) {
     }
 
     OUT <- mySUMMARY_GG2$fittingGG2
-    if (class(OUT[[1]])=="summary.nls") {
+    if (inherits(OUT[[1]], "summary.nls")) {
 
       data <- OUT[[1]]$parameters[,1]
       names <- rownames(OUT[[1]]$parameters)
@@ -802,12 +800,12 @@ server_fitsoilwater <- function(input, output, session) {
     x0 <- input$x0GG2
 
     m <- try(nls(w ~ k1 * (exp(-k0/x0^n) - exp(-k0/x^n)), start=lista))
-    if (class(m)=="try-error") {OUT <- OUT}
+    if (inherits(m, "try-error")) {OUT <- OUT}
     OUT <- list(summary(m), m)
     mySUMMARY_GG2$fittingGG2 <- OUT
 
 
-    if (class(m)=="nls") {
+    if (inherits(m, "nls")) {
       STAT <- NULL
       res = residuals(m)
       MAPE = 100 * mean(abs(res)/(res + predict(m)))
@@ -824,8 +822,8 @@ server_fitsoilwater <- function(input, output, session) {
   output$fittingGG2 <- renderPrint({
 
     OUT <- NULL
-    if (!is.null(mySUMMARY_GG2$fittingGG2[[1]]) || class(mySUMMARY_GG2$fittingGG2[[1]])!="summary.nls") {OUT <- matrix(nrow=1,ncol=1,data=c("Try again!"));rownames(OUT) <- "";colnames(OUT) <- ""}
-    if (class(mySUMMARY_GG2$fittingGG2[[1]])=="summary.nls") {OUT <- mySUMMARY_GG2$fittingGG2[[1]]$parameters[,-3]}
+    if (!is.null(mySUMMARY_GG2$fittingGG2[[1]]) || !inherits(mySUMMARY_GG2$fittingGG2[[1]], "summary.nls")) {OUT <- matrix(nrow=1,ncol=1,data=c("Try again!"));rownames(OUT) <- "";colnames(OUT) <- ""}
+    if (inherits(mySUMMARY_GG2$fittingGG2[[1]], "summary.nls")) {OUT <- mySUMMARY_GG2$fittingGG2[[1]]$parameters[,-3]}
     if (is.null(mySUMMARY_GG2$fittingGG2[[1]])) {OUT <- matrix(nrow=1,ncol=1,data=c("Moves the slider input for a numerical starting"));rownames(OUT) <- "";colnames(OUT) <- ""}
     OUT
 
@@ -835,8 +833,8 @@ server_fitsoilwater <- function(input, output, session) {
   output$statGG2 <- renderPrint({
 
     STAT <- NULL
-    if (!is.null(mySUMMARY_GG2$fittingGG2[[1]]) || class(mySUMMARY_GG2$fittingGG2[[1]])!="summary.nls") {STAT <- NULL}
-    if (class(mySUMMARY_GG2$fittingGG2[[1]])=="summary.nls") {STAT <- mySTAT_GG2$statGG2}
+    if (!is.null(mySUMMARY_GG2$fittingGG2[[1]]) || !inherits(mySUMMARY_GG2$fittingGG2[[1]], "summary.nls")) {STAT <- NULL}
+    if (inherits(mySUMMARY_GG2$fittingGG2[[1]], "summary.nls")) {STAT <- mySTAT_GG2$statGG2}
     if (is.null(mySUMMARY_GG2$fittingGG2[[1]])) {STAT <- NULL}
     STAT
 
@@ -906,7 +904,7 @@ server_fitsoilwater <- function(input, output, session) {
 
 
     OUT <- mySUMMARY_DE2$fittingDE2
-    if (class(OUT[[1]])=="summary.nls") {
+    if (inherits(OUT[[1]], "summary.nls")) {
 
       data <- OUT[[1]]$parameters[,1]
       names <- rownames(OUT[[1]]$parameters)
@@ -967,12 +965,12 @@ server_fitsoilwater <- function(input, output, session) {
     lista <- c(C=input$thetaRDE2,A1=input$a1DE2,h1=input$h1_DE2,A2=input$a2DE2,h2=input$h2_DE2)
 
     m <- try(nls(w ~  C + A1 * exp(-x/h1) + A2 * exp(-x/h2), start=lista))
-    if (class(m)=="try-error") {OUT <- OUT}
+    if (inherits(m, "try-error")) {OUT <- OUT}
     OUT <- list(summary(m), m)
     mySUMMARY_DE2$fittingDE2 <- OUT
 
 
-    if (class(m)=="nls") {
+    if (inherits(m, "nls")) {
       STAT <- NULL
       res = residuals(m)
       MAPE = 100 * mean(abs(res)/(res + predict(m)))
@@ -989,8 +987,8 @@ server_fitsoilwater <- function(input, output, session) {
   output$fittingDE2 <- renderPrint({
 
     OUT <- NULL
-    if (!is.null(mySUMMARY_DE2$fittingDE2[[1]]) || class(mySUMMARY_DE2$fittingDE2[[1]])!="summary.nls") {OUT <- matrix(nrow=1,ncol=1,data=c("Try again!"));rownames(OUT) <- "";colnames(OUT) <- ""}
-    if (class(mySUMMARY_DE2$fittingDE2[[1]])=="summary.nls") {OUT <- mySUMMARY_DE2$fittingDE2[[1]]$parameters[,-3]}
+    if (!is.null(mySUMMARY_DE2$fittingDE2[[1]]) || !inherits(mySUMMARY_DE2$fittingDE2[[1]], "summary.nls")) {OUT <- matrix(nrow=1,ncol=1,data=c("Try again!"));rownames(OUT) <- "";colnames(OUT) <- ""}
+    if (inherits(mySUMMARY_DE2$fittingDE2[[1]], "summary.nls")) {OUT <- mySUMMARY_DE2$fittingDE2[[1]]$parameters[,-3]}
     if (is.null(mySUMMARY_DE2$fittingDE2[[1]])) {OUT <- matrix(nrow=1,ncol=1,data=c("Moves the slider input for a numerical starting"));rownames(OUT) <- "";colnames(OUT) <- ""}
     OUT
 
@@ -1000,8 +998,8 @@ server_fitsoilwater <- function(input, output, session) {
   output$statDE2 <- renderPrint({
 
     STAT <- NULL
-    if (!is.null(mySUMMARY_DE2$fittingDE2[[1]]) || class(mySUMMARY_DE2$fittingDE2[[1]])!="summary.nls") {STAT <- NULL}
-    if (class(mySUMMARY_DE2$fittingDE2[[1]])=="summary.nls") {STAT <- mySTAT_DE2$statDE2}
+    if (!is.null(mySUMMARY_DE2$fittingDE2[[1]]) || !inherits(mySUMMARY_DE2$fittingDE2[[1]], "summary.nls")) {STAT <- NULL}
+    if (inherits(mySUMMARY_DE2$fittingDE2[[1]], "summary.nls")) {STAT <- mySTAT_DE2$statDE2}
     if (is.null(mySUMMARY_DE2$fittingDE2[[1]])) {STAT <- NULL}
     STAT
 
@@ -1837,3 +1835,4 @@ tabPanel("About", "",
 fitsoilwater_App <- function() {
   shinyApp(ui_fitsoilwater,server_fitsoilwater)
 }
+
